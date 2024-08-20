@@ -5,35 +5,40 @@ import 'woklog.dart';
 import 'prog.dart';
 import 'exer.dart';
 import 'profile.dart';
+
 class DashboardPage extends StatelessWidget {
   @override
-
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Dashboard'),
-        backgroundColor: Colors.blueAccent,
+        title: Text('Dashboard', style: TextStyle(fontWeight: FontWeight.bold)),
+        backgroundColor: Colors.deepPurple,
+        elevation: 0,
+        toolbarHeight: 70,
+        centerTitle: true,
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Welcome, [User Name]',
-                style: TextStyle(
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.bold,
-                ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Hello, [User Name]',
+              style: TextStyle(
+                fontSize: 28.0,
+                fontWeight: FontWeight.w600,
+                color: Colors.deepPurple,
               ),
-              SizedBox(height: 20.0),
-              GridView.count(
-                shrinkWrap: true,
-                crossAxisCount: 2,
-                childAspectRatio: 1.5,
-                crossAxisSpacing: 16.0,
-                mainAxisSpacing: 16.0,
+            ),
+            SizedBox(height: 20.0),
+            Expanded(
+              child: GridView(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 12.0,
+                  mainAxisSpacing: 12.0,
+                  childAspectRatio: 1.2,
+                ),
                 children: [
                   DashboardCard(
                     title: 'Membership',
@@ -44,7 +49,6 @@ class DashboardPage extends StatelessWidget {
                         context,
                         MaterialPageRoute(builder: (context) => MembershipManagementPage()),
                       );
-
                     },
                   ),
                   DashboardCard(
@@ -64,7 +68,6 @@ class DashboardPage extends StatelessWidget {
                         context,
                         MaterialPageRoute(builder: (context) => CalorieTrackingPage()),
                       );
-                      // Navigate to Calorie Summary page
                     },
                   ),
                   DashboardCard(
@@ -76,48 +79,48 @@ class DashboardPage extends StatelessWidget {
                         context,
                         MaterialPageRoute(builder: (context) => ProgressTrackingPage()),
                       );
-                      // Navigate to Progress Tracker page
                     },
                   ),
                   DashboardCard(
-                    title: 'exer',
+                    title: 'Exercise',
                     icon: Icons.table_bar_rounded,
-                    color: Colors.blueAccent,
+                    color: Colors.purpleAccent,
                     onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => ExerciseTutorialPage()),
                       );
-                      // Navigate to Progress Tracker page
                     },
                   ),
                   DashboardCard(
                     title: 'Profile',
-                    icon: Icons.table_bar_rounded,
-                    color: Colors.blueAccent,
+                    icon: Icons.person,
+                    color: Colors.cyanAccent,
                     onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => ProfilePage()),
                       );
-                      // Navigate to Progress Tracker page
                     },
                   ),
                 ],
               ),
-              SizedBox(height: 20.0),
-              Text(
-                'Quick Actions',
-                style: TextStyle(
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.bold,
-                ),
+            ),
+            SizedBox(height: 20.0),
+            Text(
+              'Quick Actions',
+              style: TextStyle(
+                fontSize: 20.0,
+                fontWeight: FontWeight.w500,
+                color: Colors.grey[700],
               ),
-              SizedBox(height: 10.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  ActionButton(
+            ),
+            SizedBox(height: 10.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: ActionButton(
                     title: 'Log Workout',
                     icon: Icons.note_add,
                     onTap: () {
@@ -125,23 +128,28 @@ class DashboardPage extends StatelessWidget {
                         context,
                         MaterialPageRoute(builder: (context) => WorkoutLoggingPage()),
                       );
-                      // Navigate to Log Workout page
                     },
                   ),
-                  ActionButton(
+                ),
+                SizedBox(width: 16.0),
+                Expanded(
+                  child: ActionButton(
                     title: 'Log Food',
                     icon: Icons.fastfood,
                     onTap: () {
                       // Navigate to Log Food page
                     },
                   ),
-                ],
-              ),
-            ],
-          ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.deepPurple,
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.white60,
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -150,7 +158,6 @@ class DashboardPage extends StatelessWidget {
           BottomNavigationBarItem(
             icon: Icon(Icons.fitness_center),
             label: 'Workouts',
-
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
@@ -181,7 +188,7 @@ class DashboardCard extends StatelessWidget {
       onTap: onTap,
       child: Card(
         color: color,
-        elevation: 4.0,
+        elevation: 6.0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16.0),
         ),
@@ -191,15 +198,15 @@ class DashboardCard extends StatelessWidget {
             children: [
               Icon(
                 icon,
-                size: 40.0,
+                size: 36.0,
                 color: Colors.white,
               ),
-              SizedBox(height: 10.0),
+              SizedBox(height: 8.0),
               Text(
                 title,
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 18.0,
+                  fontSize: 16.0,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -226,25 +233,35 @@ class ActionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Column(
-        children: [
-          CircleAvatar(
-            radius: 30.0,
-            backgroundColor: Colors.blueAccent,
-            child: Icon(
-              icon,
-              color: Colors.white,
-              size: 30.0,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.deepPurple,
+          borderRadius: BorderRadius.circular(12.0),
+        ),
+        padding: EdgeInsets.all(12.0),
+        child: Column(
+          children: [
+            CircleAvatar(
+              radius: 28.0,
+              backgroundColor: Colors.white,
+              child: Icon(
+                icon,
+                color: Colors.deepPurple,
+                size: 28.0,
+              ),
             ),
-          ),
-          SizedBox(height: 8.0),
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: 16.0,
+            SizedBox(height: 8.0),
+            Text(
+              title,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 14.0,
+                fontWeight: FontWeight.w600,
+              ),
+              textAlign: TextAlign.center,
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
