@@ -1,6 +1,8 @@
 
 import 'package:flutter/material.dart';
+import 'package:untitled1/admin.dart';
 import 'dash.dart';
+import 'admin.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -140,7 +142,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
   _forgotPassword(context) {
     return TextButton(
-      onPressed: () {},
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => AdminDashboard()),
+        );
+      },
       child: const Text("Forgot password?",
         style: TextStyle(color: Colors.purple),
       ),

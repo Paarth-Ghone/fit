@@ -12,142 +12,23 @@ class DashboardPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Dashboard', style: TextStyle(fontWeight: FontWeight.bold)),
-        backgroundColor: Colors.deepPurple,
+        backgroundColor: Colors.deepPurpleAccent,
         elevation: 0,
-        toolbarHeight: 70,
         centerTitle: true,
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
+      body: Container(
+        color: Colors.grey[100],
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Hello, [User Name]',
-              style: TextStyle(
-                fontSize: 28.0,
-                fontWeight: FontWeight.w600,
-                color: Colors.deepPurple,
-              ),
-            ),
-            SizedBox(height: 20.0),
-            Expanded(
-              child: GridView(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 12.0,
-                  mainAxisSpacing: 12.0,
-                  childAspectRatio: 1.2,
-                ),
-                children: [
-                  DashboardCard(
-                    title: 'Membership',
-                    icon: Icons.card_membership,
-                    color: Colors.orangeAccent,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => MembershipManagementPage()),
-                      );
-                    },
-                  ),
-                  DashboardCard(
-                    title: 'Workout Plans',
-                    icon: Icons.fitness_center,
-                    color: Colors.greenAccent,
-                    onTap: () {
-                      // Navigate to Workout Plans page
-                    },
-                  ),
-                  DashboardCard(
-                    title: 'Calorie Summary',
-                    icon: Icons.restaurant_menu,
-                    color: Colors.redAccent,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => CalorieTrackingPage()),
-                      );
-                    },
-                  ),
-                  DashboardCard(
-                    title: 'Progress Tracker',
-                    icon: Icons.show_chart,
-                    color: Colors.blueAccent,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => ProgressTrackingPage()),
-                      );
-                    },
-                  ),
-                  DashboardCard(
-                    title: 'Exercise',
-                    icon: Icons.table_bar_rounded,
-                    color: Colors.purpleAccent,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => ExerciseTutorialPage()),
-                      );
-                    },
-                  ),
-                  DashboardCard(
-                    title: 'Profile',
-                    icon: Icons.person,
-                    color: Colors.cyanAccent,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => ProfilePage()),
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 20.0),
-            Text(
-              'Quick Actions',
-              style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.w500,
-                color: Colors.grey[700],
-              ),
-            ),
-            SizedBox(height: 10.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: ActionButton(
-                    title: 'Log Workout',
-                    icon: Icons.note_add,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => WorkoutLoggingPage()),
-                      );
-                    },
-                  ),
-                ),
-                SizedBox(width: 16.0),
-                Expanded(
-                  child: ActionButton(
-                    title: 'Log Food',
-                    icon: Icons.fastfood,
-                    onTap: () {
-                      // Navigate to Log Food page
-                    },
-                  ),
-                ),
-              ],
-            ),
+            _buildHeader(context),
+            Expanded(child: _buildContent(context)),
+            _buildQuickActions(context),
           ],
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.deepPurple,
+        backgroundColor: Colors.deepPurpleAccent,
         selectedItemColor: Colors.white,
         unselectedItemColor: Colors.white60,
         items: [
@@ -167,96 +48,220 @@ class DashboardPage extends StatelessWidget {
       ),
     );
   }
-}
 
-class DashboardCard extends StatelessWidget {
-  final String title;
-  final IconData icon;
-  final Color color;
-  final VoidCallback onTap;
+  Widget _buildHeader(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Colors.deepPurpleAccent, Colors.purpleAccent],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      child: Row(
+        children: [
+          CircleAvatar(
+            radius: 30.0,
+            backgroundColor: Colors.white,
+            child: Icon(Icons.person, size: 30.0, color: Colors.deepPurpleAccent),
+          ),
+          SizedBox(width: 16.0),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Hello, [User Name]',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 8.0),
+                Text(
+                  'Welcome back!',
+                  style: TextStyle(
+                    color: Colors.white70,
+                    fontSize: 16.0,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
-  DashboardCard({
-    required this.title,
-    required this.icon,
-    required this.color,
-    required this.onTap,
-  });
+  Widget _buildContent(BuildContext context) {
+    return ListView(
+      padding: EdgeInsets.all(16.0),
+      children: [
+        _buildSection(
+          context,
+          title: 'Membership',
+          icon: Icons.card_membership,
+          color: Colors.purple[100]!,
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => MembershipManagementPage()),
+            );
+          },
+        ),
+        _buildSection(
+          context,
+          title: 'Workout Plans',
+          icon: Icons.fitness_center,
+          color: Colors.purple[200]!,
+          onTap: () {
+            // Navigate to Workout Plans page
+          },
+        ),
+        _buildSection(
+          context,
+          title: 'Calorie Summary',
+          icon: Icons.restaurant_menu,
+          color: Colors.purple[300]!,
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => CalorieTrackingPage()),
+            );
+          },
+        ),
+        _buildSection(
+          context,
+          title: 'Progress Tracker',
+          icon: Icons.show_chart,
+          color: Colors.purple[400]!,
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ProgressTrackingPage()),
+            );
+          },
+        ),
+        _buildSection(
+          context,
+          title: 'Exercise',
+          icon: Icons.table_bar_rounded,
+          color: Colors.purple[500]!,
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ExerciseTutorialPage()),
+            );
+          },
+        ),
+        _buildSection(
+          context,
+          title: 'Profile',
+          icon: Icons.person,
+          color: Colors.purple[600]!,
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ProfilePage()),
+            );
+          },
+        ),
+      ],
+    );
+  }
 
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildSection(BuildContext context, {required String title, required IconData icon, required Color color, required VoidCallback onTap}) {
     return GestureDetector(
       onTap: onTap,
-      child: Card(
-        color: color,
-        elevation: 6.0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16.0),
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 8.0),
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(12.0),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              offset: Offset(0, 4),
+              blurRadius: 8.0,
+            ),
+          ],
         ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                icon,
-                size: 36.0,
-                color: Colors.white,
-              ),
-              SizedBox(height: 8.0),
-              Text(
-                title,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
+        child: ListTile(
+          contentPadding: EdgeInsets.all(16.0),
+          leading: Icon(icon, size: 40.0, color: Colors.white),
+          title: Text(
+            title,
+            style: TextStyle(color: Colors.black87, fontSize: 18.0, fontWeight: FontWeight.bold),
           ),
+          trailing: Icon(Icons.arrow_forward_ios, color: Colors.deepPurpleAccent),
         ),
       ),
     );
   }
-}
 
-class ActionButton extends StatelessWidget {
-  final String title;
-  final IconData icon;
-  final VoidCallback onTap;
+  Widget _buildQuickActions(BuildContext context) {
+    return Container(
+      color: Colors.deepPurple[100],
+      padding: EdgeInsets.all(16.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _buildActionButton(
+            context,
+            title: 'Log Workout',
+            icon: Icons.note_add,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => WorkoutLoggingPage()),
+              );
+            },
+          ),
+          _buildActionButton(
+            context,
+            title: 'Log Food',
+            icon: Icons.fastfood,
+            onTap: () {
+              // Navigate to Log Food page
+            },
+          ),
+        ],
+      ),
+    );
+  }
 
-  ActionButton({
-    required this.title,
-    required this.icon,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildActionButton(BuildContext context, {required String title, required IconData icon, required VoidCallback onTap}) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
+        width: 100.0, // Adjusted width
+        height: 100.0, // Adjusted height
         decoration: BoxDecoration(
-          color: Colors.deepPurple,
+          gradient: LinearGradient(
+            colors: [Colors.deepPurpleAccent, Colors.purpleAccent],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
           borderRadius: BorderRadius.circular(12.0),
         ),
-        padding: EdgeInsets.all(12.0),
+        padding: EdgeInsets.all(8.0),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CircleAvatar(
-              radius: 28.0,
+              radius: 20.0, // Smaller radius
               backgroundColor: Colors.white,
-              child: Icon(
-                icon,
-                color: Colors.deepPurple,
-                size: 28.0,
-              ),
+              child: Icon(icon, color: Colors.deepPurpleAccent, size: 20.0), // Smaller icon size
             ),
             SizedBox(height: 8.0),
             Text(
               title,
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 14.0,
-                fontWeight: FontWeight.w600,
+                fontSize: 12.0, // Smaller font size
+                fontWeight: FontWeight.bold,
               ),
               textAlign: TextAlign.center,
             ),

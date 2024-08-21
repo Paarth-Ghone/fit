@@ -6,9 +6,11 @@ class MembershipManagementPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Membership Management'),
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: Colors.black,
+        elevation: 0,
       ),
-      body: Padding(
+      body: Container(
+        color: Colors.black,
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -20,6 +22,7 @@ class MembershipManagementPage extends StatelessWidget {
               style: TextStyle(
                 fontSize: 18.0,
                 fontWeight: FontWeight.bold,
+                color: Colors.white70,
               ),
             ),
             SizedBox(height: 10.0),
@@ -38,9 +41,13 @@ class MembershipManagementPage extends StatelessWidget {
               },
               child: Text('Renew Membership'),
               style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(vertical: 16.0),
-                primary: Colors.greenAccent,
-                textStyle: TextStyle(fontSize: 18.0),
+                primary: Colors.white,
+                onPrimary: Colors.black,
+                padding: EdgeInsets.symmetric(vertical: 10.0),
+                textStyle: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(11.0),
+                ),
               ),
             ),
           ],
@@ -52,6 +59,7 @@ class MembershipManagementPage extends StatelessWidget {
   Widget _buildMembershipCard() {
     return Card(
       elevation: 4.0,
+      color: Colors.grey[800],
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16.0),
       ),
@@ -65,6 +73,7 @@ class MembershipManagementPage extends StatelessWidget {
               style: TextStyle(
                 fontSize: 20.0,
                 fontWeight: FontWeight.bold,
+                color: Colors.white,
               ),
             ),
             SizedBox(height: 10.0),
@@ -86,11 +95,18 @@ class MembershipManagementPage extends StatelessWidget {
         children: [
           Text(
             label,
-            style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w500),
+            style: TextStyle(
+              fontSize: 16.0,
+              fontWeight: FontWeight.w500,
+              color: Colors.white70,
+            ),
           ),
           Text(
             value,
-            style: TextStyle(fontSize: 16.0),
+            style: TextStyle(
+              fontSize: 16.0,
+              color: Colors.white,
+            ),
           ),
         ],
       ),
@@ -100,6 +116,7 @@ class MembershipManagementPage extends StatelessWidget {
   Widget _buildNoticeCard(String title, String description) {
     return Card(
       elevation: 2.0,
+      color: Colors.grey[900],
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12.0),
       ),
@@ -113,12 +130,16 @@ class MembershipManagementPage extends StatelessWidget {
               style: TextStyle(
                 fontSize: 16.0,
                 fontWeight: FontWeight.bold,
+                color: Colors.white,
               ),
             ),
             SizedBox(height: 8.0),
             Text(
               description,
-              style: TextStyle(fontSize: 14.0),
+              style: TextStyle(
+                fontSize: 14.0,
+                color: Colors.white70,
+              ),
             ),
           ],
         ),
