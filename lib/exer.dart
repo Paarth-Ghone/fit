@@ -52,18 +52,24 @@ class _ExerciseTutorialPageState extends State<ExerciseTutorialPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Exercise Tutorials'),
+        title: Text('Exercise Tutorials', style: TextStyle(fontWeight: FontWeight.bold)),
+        backgroundColor: Colors.deepPurpleAccent,
+        elevation: 0,
       ),
-      body: Padding(
+      body: Container(
+        color: Colors.grey[100],
         padding: const EdgeInsets.all(16.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextField(
               controller: _searchController,
               decoration: InputDecoration(
-                labelText: 'Search the exercise',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.search),
+                labelText: 'Search Exercises',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                prefixIcon: Icon(Icons.search, color: Colors.deepPurpleAccent),
               ),
               onChanged: (query) {
                 _filterExercises(query);
@@ -76,48 +82,56 @@ class _ExerciseTutorialPageState extends State<ExerciseTutorialPage> {
                 itemBuilder: (context, index) {
                   final exercise = filteredExercises[index];
                   return Card(
-                    elevation: 3,
-                    margin: EdgeInsets.symmetric(vertical: 8),
+                    elevation: 4.0,
+                    color: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16.0),
+                    ),
                     child: Padding(
-                      padding: EdgeInsets.all(16),
+                      padding: EdgeInsets.all(16.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             exercise['name']!,
                             style: TextStyle(
-                              fontSize: 20,
+                              fontSize: 20.0,
                               fontWeight: FontWeight.bold,
+                              color: Colors.black87,
                             ),
                           ),
                           SizedBox(height: 10),
                           Text(
                             'Steps:',
                             style: TextStyle(
-                              fontSize: 16,
+                              fontSize: 16.0,
                               fontWeight: FontWeight.bold,
+                              color: Colors.black87,
                             ),
                           ),
                           SizedBox(height: 5),
                           Text(
                             exercise['steps']!,
                             style: TextStyle(
-                              fontSize: 14,
+                              fontSize: 14.0,
+                              color: Colors.black54,
                             ),
                           ),
                           SizedBox(height: 10),
                           Text(
                             'Safety Tips:',
                             style: TextStyle(
-                              fontSize: 16,
+                              fontSize: 16.0,
                               fontWeight: FontWeight.bold,
+                              color: Colors.black87,
                             ),
                           ),
                           SizedBox(height: 5),
                           Text(
                             exercise['safety']!,
                             style: TextStyle(
-                              fontSize: 14,
+                              fontSize: 14.0,
+                              color: Colors.black54,
                             ),
                           ),
                         ],

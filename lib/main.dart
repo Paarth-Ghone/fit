@@ -1,6 +1,9 @@
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:untitled1/admin.dart';
+import 'package:untitled1/log.dart';
 import 'dash.dart';
 import 'admin.dart';
 void main() async {
@@ -17,159 +20,104 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: LoginScreen(),
+      home: WelcomeScreen(),
     );
   }
 }
 
-class LoginScreen extends StatefulWidget {
+class WelcomeScreen extends StatefulWidget {
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  _WelcomeScreenState createState() => _WelcomeScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _WelcomeScreenState extends State<WelcomeScreen> {
+  final List<String> _imagePaths = [
+    'assets/images/image1.png',
+    'assets/images/image2.png',
+    'assets/images/image3.png',
+  ];
+  final PageController _pageController = PageController();
+  late final Timer _timer;
 
-  final _formKey = GlobalKey<FormState>();
-  String _email = '';
-  String _password = '';
-  bool _isLogin = true;
+  @override
+  void initState() {
+    super.initState();
+    _startAutoSlide();
+  }
 
-  void _toggleFormMode() {
-    setState(() {
-      _isLogin = !_isLogin;
+  void _startAutoSlide() {
+    _timer = Timer.periodic(Duration(seconds: 3), (timer) {
+      if (_pageController.hasClients) {
+        final nextPage = (_pageController.page! + 1).toInt() % _imagePaths.length;
+        _pageController.animateToPage(nextPage,
+            duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+      }
     });
   }
 
-  void _submit() async {
-    if (!_formKey.currentState!.validate()) {
-      return;
-    }
-    _formKey.currentState!.save();
-
-    /*try {
-      if (_isLogin) {
-        // Login
-        await _auth.signInWithEmailAndPassword(email: _email, password: _password);
-      } else {
-        // Sign Up
-        await _auth.createUserWithEmailAndPassword(email: _email, password: _password);
-      }
-      // Navigate to the Dashboard (Add navigation code here)
-    } on FirebaseAuthException catch (e) {
-      // Handle authentication error (e.g., show error message)
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.message!)));
-    }*/
+  @override
+  void dispose() {
+    _timer.cancel();
+    _pageController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        body: Container(
-          margin: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              _header(context),
-              _inputField(context),
-              _forgotPassword(context),
-              _signup(context),
-            ],
+    return Scaffold(
+      body: Stack(
+        children: <Widget>[
+          PageView.builder(
+            controller: _pageController,
+            itemCount: _imagePaths.length,
+            itemBuilder: (context, index) {
+              return Image.asset(
+                _imagePaths[index],
+                fit: BoxFit.cover,
+                width: double.infinity,
+                height: double.infinity,
+              );
+            },
           ),
-        ),
-      ),
-    );
-  }
-
-  _header(context) {
-    return const Column(
-      children: [
-        Text(
-          "Welcome Back",
-          style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
-        ),
-        Text("Enter your credential to login"),
-      ],
-    );
-  }
-
-  _inputField(context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        TextField(
-          decoration: InputDecoration(
-              hintText: "Username",
-              border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(18),
-                  borderSide: BorderSide.none
+          Positioned(
+            bottom: 50.0,
+            left: 0,
+            right: 0,
+            child: Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => LoginScreen()),
+                  );
+                },
+                child: Text('Get Started'),
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.blueAccent,
+                  padding: EdgeInsets.symmetric(horizontal: 40.0, vertical: 15.0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                  ),
+                ),
               ),
-              fillColor: Colors.purple.withOpacity(0.1),
-              filled: true,
-              prefixIcon: const Icon(Icons.person)),
-        ),
-        const SizedBox(height: 10),
-        TextField(
-          decoration: InputDecoration(
-            hintText: "Password",
-            border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(18),
-                borderSide: BorderSide.none),
-            fillColor: Colors.purple.withOpacity(0.1),
-            filled: true,
-            prefixIcon: const Icon(Icons.password),
+            ),
           ),
-          obscureText: true,
-        ),
-        const SizedBox(height: 10),
-        ElevatedButton(
-          onPressed: () {
-          },
-          style: ElevatedButton.styleFrom(
-            shape: const StadiumBorder(),
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            backgroundColor: Colors.purple,
-          ),
-          child: const Text(
-            "Login",
-            style: TextStyle(fontSize: 20),
-          ),
-        )
-      ],
-    );
-  }
-
-  _forgotPassword(context) {
-    return TextButton(
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => AdminDashboard()),
-        );
-      },
-      child: const Text("Forgot password?",
-        style: TextStyle(color: Colors.purple),
+        ],
       ),
     );
   }
+}
 
-  _signup(context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const Text("Dont have an account? "),
-        TextButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => DashboardPage()),
-    );
-    },
-
-            child: const Text("Sign Up", style: TextStyle(color: Colors.purple),)
-        )
-      ],
+class NextPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Next Page'),
+      ),
+      body: Center(
+        child: Text('Welcome to the next page!'),
+      ),
     );
   }
 }

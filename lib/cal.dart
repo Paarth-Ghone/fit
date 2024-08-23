@@ -5,14 +5,25 @@ class CalorieTrackingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Calorie Tracking'),
-        backgroundColor: Colors.orangeAccent,
+        title: Text('Calorie Tracking', style: TextStyle(fontWeight: FontWeight.bold)),
+        backgroundColor: Colors.deepPurpleAccent,
+        elevation: 0,
       ),
-      body: Padding(
+      body: Container(
+        color: Colors.grey[100],
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Text(
+              'Daily Calorie Summary',
+              style: TextStyle(
+                fontSize: 20.0,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
+              ),
+            ),
+            SizedBox(height: 10.0),
             _buildCalorieSummary(),
             SizedBox(height: 20.0),
             Text(
@@ -20,20 +31,31 @@ class CalorieTrackingPage extends StatelessWidget {
               style: TextStyle(
                 fontSize: 18.0,
                 fontWeight: FontWeight.bold,
+                color: Colors.black87,
               ),
             ),
             SizedBox(height: 10.0),
             _buildFoodLogForm(),
             SizedBox(height: 20.0),
-            ElevatedButton(
-              onPressed: () {
-                // Handle food logging
-              },
-              child: Text('Log Food'),
-              style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(vertical: 16.0),
-                primary: Colors.greenAccent,
-                textStyle: TextStyle(fontSize: 18.0),
+            Align(
+              alignment: Alignment.centerRight,
+              child: ElevatedButton(
+                onPressed: () {
+                  // Handle food logging
+                },
+                child: Text('Log Food'),
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.deepPurpleAccent, // Background color
+                  onPrimary: Colors.white, // Text color
+                  padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.0),
+                  ),
+                  textStyle: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ),
           ],
@@ -45,6 +67,7 @@ class CalorieTrackingPage extends StatelessWidget {
   Widget _buildCalorieSummary() {
     return Card(
       elevation: 4.0,
+      color: Colors.white,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16.0),
       ),
@@ -53,14 +76,6 @@ class CalorieTrackingPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Daily Calorie Summary',
-              style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 10.0),
             _buildDetailRow('Total Calories Consumed:', '1500 kcal'),
             _buildDetailRow('Daily Goal:', '2000 kcal'),
             _buildDetailRow('Remaining Calories:', '500 kcal'),
@@ -78,11 +93,11 @@ class CalorieTrackingPage extends StatelessWidget {
         children: [
           Text(
             label,
-            style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w500),
+            style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w500, color: Colors.black87),
           ),
           Text(
             value,
-            style: TextStyle(fontSize: 16.0),
+            style: TextStyle(fontSize: 16.0, color: Colors.black54),
           ),
         ],
       ),
