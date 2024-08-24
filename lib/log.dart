@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:untitled1/admin.dart';
 import 'dash.dart';
-
+import 'signup.dart';
 class LoginScreen extends StatefulWidget {
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-
   final _formKey = GlobalKey<FormState>();
   String _email = '';
   String _password = '';
@@ -26,19 +25,7 @@ class _LoginScreenState extends State<LoginScreen> {
     }
     _formKey.currentState!.save();
 
-    /*try {
-      if (_isLogin) {
-        // Login
-        await _auth.signInWithEmailAndPassword(email: _email, password: _password);
-      } else {
-        // Sign Up
-        await _auth.createUserWithEmailAndPassword(email: _email, password: _password);
-      }
-      // Navigate to the Dashboard (Add navigation code here)
-    } on FirebaseAuthException catch (e) {
-      // Handle authentication error (e.g., show error message)
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.message!)));
-    }*/
+
   }
 
   @override
@@ -46,14 +33,18 @@ class _LoginScreenState extends State<LoginScreen> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
+        backgroundColor: Colors.black,
         body: Container(
           margin: const EdgeInsets.all(24),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               _header(context),
+              const SizedBox(height: 40),
               _inputField(context),
+              const SizedBox(height: 20),
               _forgotPassword(context),
+              const SizedBox(height: 20),
               _signup(context),
             ],
           ),
@@ -62,45 +53,61 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  _header(context) {
-    return const Column(
+  Widget _header(BuildContext context) {
+    return Column(
       children: [
         Text(
           "Welcome Back",
-          style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontSize: 36,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
         ),
-        Text("Enter your credential to login"),
+        const SizedBox(height: 8),
+        Text(
+          "Enter your credentials to login",
+          style: TextStyle(
+            color: Colors.grey[500],
+          ),
+        ),
       ],
     );
   }
 
-  _inputField(context) {
+  Widget _inputField(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         TextField(
           decoration: InputDecoration(
-              hintText: "Username",
-              border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(18),
-                  borderSide: BorderSide.none
-              ),
-              fillColor: Colors.purple.withOpacity(0.1),
-              filled: true,
-              prefixIcon: const Icon(Icons.person)),
+            hintText: "Username",
+            hintStyle: TextStyle(color: Colors.grey[400]),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(18),
+              borderSide: BorderSide.none,
+            ),
+            fillColor: Colors.grey[800],
+            filled: true,
+            prefixIcon: const Icon(Icons.person, color: Colors.white),
+          ),
+          style: TextStyle(color: Colors.white),
         ),
         const SizedBox(height: 10),
         TextField(
           decoration: InputDecoration(
             hintText: "Password",
+            hintStyle: TextStyle(color: Colors.grey[400]),
             border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(18),
-                borderSide: BorderSide.none),
-            fillColor: Colors.purple.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(18),
+              borderSide: BorderSide.none,
+            ),
+            fillColor: Colors.grey[800],
             filled: true,
-            prefixIcon: const Icon(Icons.password),
+            prefixIcon: const Icon(Icons.lock, color: Colors.white),
           ),
           obscureText: true,
+          style: TextStyle(color: Colors.white),
         ),
         const SizedBox(height: 10),
         ElevatedButton(
@@ -113,21 +120,19 @@ class _LoginScreenState extends State<LoginScreen> {
           style: ElevatedButton.styleFrom(
             shape: const StadiumBorder(),
             padding: const EdgeInsets.symmetric(vertical: 16),
-            backgroundColor: Colors.purple,
-
+            primary: Colors.white,
+            onPrimary: Colors.black,
           ),
           child: const Text(
             "Login",
-            style: TextStyle(fontSize: 20, color: Colors.white70),
-
+            style: TextStyle(fontSize: 20, color: Colors.black),
           ),
-
-        )
+        ),
       ],
     );
   }
 
-  _forgotPassword(context) {
+  Widget _forgotPassword(BuildContext context) {
     return TextButton(
       onPressed: () {
         Navigator.push(
@@ -135,25 +140,34 @@ class _LoginScreenState extends State<LoginScreen> {
           MaterialPageRoute(builder: (context) => AdminDashboard()),
         );
       },
-      child: const Text("Forgot password?",
-        style: TextStyle(color: Colors.purple),
+      child: const Text(
+        "Forgot password?",
+        style: TextStyle(color: Colors.white),
       ),
     );
   }
 
-  _signup(context) {
+  Widget _signup(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Text("Dont have an account? "),
+        const Text(
+          "Don't have an account? ",
+          style: TextStyle(color: Colors.grey),
+        ),
         TextButton(
-            onPressed: () {
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => SignUpPage()),
+            );
 
-            },
-
-            child: const Text(
-              "Sign Up", style: TextStyle(color: Colors.purple),)
-        )
+          },
+          child: const Text(
+            "Sign Up",
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
       ],
     );
   }
