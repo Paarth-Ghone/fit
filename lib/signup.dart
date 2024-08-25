@@ -211,8 +211,7 @@ class _SignUpPageState extends State<SignUpPage> {
         onPressed: _submitForm,
         child: Text('Sign Up'),
         style: ElevatedButton.styleFrom(
-          primary: Colors.grey,
-          onPrimary: Colors.white,
+          foregroundColor: Colors.white, backgroundColor: Colors.grey,
           padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 24.0),
           textStyle: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
           shape: RoundedRectangleBorder(

@@ -1,6 +1,6 @@
 
 import 'dart:async';
-
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:untitled1/admin.dart';
 import 'package:untitled1/log.dart';
@@ -8,7 +8,7 @@ import 'dash.dart';
 import 'admin.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  
   runApp(MyApp());
 }
 
@@ -17,6 +17,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Gym App',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -93,7 +94,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 },
                 child: Text('Get Started'),
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.blueAccent,
+                  backgroundColor: Colors.blueAccent,
                   padding: EdgeInsets.symmetric(horizontal: 40.0, vertical: 15.0),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30.0),

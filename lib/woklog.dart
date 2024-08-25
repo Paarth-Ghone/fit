@@ -42,8 +42,8 @@ class WorkoutLoggingPage extends StatelessWidget {
                 },
                 child: Text('Log Workout'),
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.greenAccent,
-                  onPrimary: Colors.black,
+                  foregroundColor: Colors.black,
+                  backgroundColor: Colors.greenAccent,
                   padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
                   textStyle: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                   shape: RoundedRectangleBorder(

@@ -118,10 +118,9 @@ class _LoginScreenState extends State<LoginScreen> {
             );
           },
           style: ElevatedButton.styleFrom(
-            shape: const StadiumBorder(),
+            foregroundColor: Colors.black,
+            backgroundColor: Colors.white, shape: const StadiumBorder(),
             padding: const EdgeInsets.symmetric(vertical: 16),
-            primary: Colors.white,
-            onPrimary: Colors.black,
           ),
           child: const Text(
             "Login",

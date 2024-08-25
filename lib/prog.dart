@@ -91,7 +91,7 @@ class ProgressTrackingPage extends StatelessWidget {
               FlSpot(4, 250),
             ],
             isCurved: true,
-            colors: [Colors.blueAccent],
+            color: Colors.blueAccent,
             barWidth: 4,
             belowBarData: BarAreaData(show: false),
           ),
@@ -107,10 +107,46 @@ class ProgressTrackingPage extends StatelessWidget {
         titlesData: FlTitlesData(show: false),
         borderData: FlBorderData(show: false),
         barGroups: [
-          BarChartGroupData(x: 0, barRods: [BarChartRodData(y: 500, colors: [Colors.orangeAccent])]),
-          BarChartGroupData(x: 1, barRods: [BarChartRodData(y: 700, colors: [Colors.orangeAccent])]),
-          BarChartGroupData(x: 2, barRods: [BarChartRodData(y: 600, colors: [Colors.orangeAccent])]),
-          BarChartGroupData(x: 3, barRods: [BarChartRodData(y: 800, colors: [Colors.orangeAccent])]),
+          BarChartGroupData(
+            x: 0,
+            barRods: [
+              BarChartRodData(
+                fromY: 0,
+                toY: 500,
+                color: Colors.orangeAccent,
+              ),
+            ],
+          ),
+          BarChartGroupData(
+            x: 1,
+            barRods: [
+              BarChartRodData(
+                fromY: 0,
+                toY: 700,
+                color: Colors.orangeAccent,
+              ),
+            ],
+          ),
+          BarChartGroupData(
+            x: 2,
+            barRods: [
+              BarChartRodData(
+                fromY: 0,
+                toY: 600,
+                color: Colors.orangeAccent,
+              ),
+            ],
+          ),
+          BarChartGroupData(
+            x: 3,
+            barRods: [
+              BarChartRodData(
+                fromY: 0,
+                toY: 800,
+                color: Colors.orangeAccent,
+              ),
+            ],
+          ),
         ],
       ),
     );

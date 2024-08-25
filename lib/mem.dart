@@ -43,8 +43,8 @@ class MembershipManagementPage extends StatelessWidget {
                 },
                 child: Text('Renew Membership'),
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.deepPurpleAccent,
-                  onPrimary: Colors.white,
+                  foregroundColor: Colors.white,
+                  backgroundColor: Colors.deepPurpleAccent,
                   padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 24.0),
                   textStyle: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
                   shape: RoundedRectangleBorder(

@@ -89,8 +89,7 @@ class ProfilePage extends StatelessWidget {
               },
               child: Text("Log Out"),
               style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                primary: Colors.red,
+                padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15), backgroundColor: Colors.red,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),

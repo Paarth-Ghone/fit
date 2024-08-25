@@ -45,8 +45,8 @@ class CalorieTrackingPage extends StatelessWidget {
                 },
                 child: Text('Log Food'),
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.deepPurpleAccent, // Background color
-                  onPrimary: Colors.white, // Text color
+                  foregroundColor: Colors.white,
+                  backgroundColor: Colors.deepPurpleAccent, // Text color
                   padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12.0),
