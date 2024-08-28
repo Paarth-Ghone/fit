@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1018320788612",
+    "project_id": "fit-fusion-ef19f",
+    "storage_bucket": "fit-fusion-ef19f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1018320788612:android:2d418d033b4619e9b276d1",
+        "android_client_info": {
+          "package_name": "com.example.untitled1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAp7T6mjFTp4hzvs78rBmDt-TtHGdC0OcQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

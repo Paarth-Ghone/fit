@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +7,7 @@ import 'dash.dart';
 import 'admin.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   runApp(MyApp());
 }
 
@@ -33,9 +32,9 @@ class WelcomeScreen extends StatefulWidget {
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
   final List<String> _imagePaths = [
-    'assets/images/image1.png',
-    'assets/images/image2.png',
-    'assets/images/image3.png',
+    "assets/background.png",
+    'assets/image2.png',
+    'assets/image3.png',
   ];
   final PageController _pageController = PageController();
   late final Timer _timer;
