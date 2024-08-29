@@ -23,7 +23,7 @@ class _LoginScreenState extends State<LoginScreen> {
     _formKey.currentState!.save();
 
     try {
-      final url = Uri.parse('http://localhost:5000/login'); // Your Node.js backend URL
+      final url = Uri.parse('http://192.168.0.109:5000/login'); // Your Node.js backend URL
       final response = await http.post(
         url,
         headers: {'Content-Type': 'application/json'},
@@ -41,7 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
         // Navigate to the dashboard
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => DashboardPage()), // Pass user/token if needed
+          MaterialPageRoute(builder: (context) => HomePage()), // Pass user/token if needed
         );
       } else {
         setState(() {

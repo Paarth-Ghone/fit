@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:firebase_core/firebase_core.dart';
+
 import 'package:flutter/material.dart';
 import 'package:untitled1/admin.dart';
 import 'package:untitled1/log.dart';
@@ -32,7 +32,7 @@ class WelcomeScreen extends StatefulWidget {
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
   final List<String> _imagePaths = [
-    "assets/background.png",
+    "img/background.png",
     'assets/image2.png',
     'assets/image3.png',
   ];
@@ -88,7 +88,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => LoginScreen()),
+                    MaterialPageRoute(builder: (context) =>LoginScreen()),
                   );
                 },
                 child: Text('Get Started'),
