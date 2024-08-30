@@ -51,99 +51,125 @@ class _ExerciseTutorialPageState extends State<ExerciseTutorialPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Exercise Tutorials', style: TextStyle(fontWeight: FontWeight.bold)),
-        backgroundColor: Colors.deepPurpleAccent,
-        elevation: 0,
-      ),
-      body: Container(
-        color: Colors.grey[100],
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                labelText: 'Search Exercises',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.0),
+      body: Stack(
+        children: [
+          // Background image
+          Positioned.fill(
+            child: Image.asset(
+              'img/background.png', // Update with your background image path
+              fit: BoxFit.cover,
+            ),
+          ),
+          // Content on top of background image
+          Container(
+            color: Colors.black.withOpacity(0.6), // Semi-transparent overlay
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 40.0), // Space for status bar
+                Text(
+                  'Exercise Tutorials',
+                  style: TextStyle(
+                    fontSize: 26.0,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white, // White text for better contrast
+                  ),
                 ),
-                prefixIcon: Icon(Icons.search, color: Colors.deepPurpleAccent),
-              ),
-              onChanged: (query) {
-                _filterExercises(query);
-              },
+                SizedBox(height: 16.0),
+                _buildSearchBar(),
+                SizedBox(height: 20.0),
+                Expanded(
+                  child: _buildExerciseList(),
+                ),
+              ],
             ),
-            SizedBox(height: 20),
-            Expanded(
-              child: ListView.builder(
-                itemCount: filteredExercises.length,
-                itemBuilder: (context, index) {
-                  final exercise = filteredExercises[index];
-                  return Card(
-                    elevation: 4.0,
-                    color: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16.0),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            exercise['name']!,
-                            style: TextStyle(
-                              fontSize: 20.0,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black87,
-                            ),
-                          ),
-                          SizedBox(height: 10),
-                          Text(
-                            'Steps:',
-                            style: TextStyle(
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black87,
-                            ),
-                          ),
-                          SizedBox(height: 5),
-                          Text(
-                            exercise['steps']!,
-                            style: TextStyle(
-                              fontSize: 14.0,
-                              color: Colors.black54,
-                            ),
-                          ),
-                          SizedBox(height: 10),
-                          Text(
-                            'Safety Tips:',
-                            style: TextStyle(
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black87,
-                            ),
-                          ),
-                          SizedBox(height: 5),
-                          Text(
-                            exercise['safety']!,
-                            style: TextStyle(
-                              fontSize: 14.0,
-                              color: Colors.black54,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
+    );
+  }
+
+  Widget _buildSearchBar() {
+    return TextField(
+      controller: _searchController,
+      style: TextStyle(color: Colors.white), // White text inside search bar
+      decoration: InputDecoration(
+        labelText: 'Search Exercises',
+        labelStyle: TextStyle(color: Colors.white70), // White text for the label
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12.0),
+          borderSide: BorderSide.none, // No border
+        ),
+        prefixIcon: Icon(Icons.search, color: Colors.white70), // White icon
+        filled: true,
+        fillColor: Colors.white.withOpacity(0.2), // Semi-transparent fill color
+        contentPadding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 16.0),
+      ),
+      onChanged: (query) {
+        _filterExercises(query);
+      },
+    );
+  }
+
+  Widget _buildExerciseList() {
+    return ListView.builder(
+      itemCount: filteredExercises.length,
+      itemBuilder: (context, index) {
+        final exercise = filteredExercises[index];
+        return Card(
+          elevation: 5.0,
+          color: Colors.black12.withOpacity(0.6), // Semi-transparent card background
+          margin: const EdgeInsets.symmetric(vertical: 8.0),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16.0), // Rounded corners
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  exercise['name']!,
+                  style: TextStyle(
+                    fontSize: 22.0,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white, // White text for card title
+                  ),
+                ),
+                SizedBox(height: 10),
+                _buildDetailSection('Steps:', exercise['steps']!),
+                SizedBox(height: 10),
+                _buildDetailSection('Safety Tips:', exercise['safety']!),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildDetailSection(String title, String content) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: TextStyle(
+            fontSize: 16.0,
+            fontWeight: FontWeight.bold,
+            color: Colors.white, // White text for section titles
+          ),
+        ),
+        SizedBox(height: 5),
+        Text(
+          content,
+          style: TextStyle(
+            fontSize: 14.0,
+            color: Colors.white70, // Slightly faded white for content text
+          ),
+        ),
+      ],
     );
   }
 }

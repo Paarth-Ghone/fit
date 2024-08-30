@@ -17,6 +17,11 @@ class _LoginScreenState extends State<LoginScreen> {
   String _errorMessage = '';
 
   void _submit() async {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => HomePage()),
+    );
+    /*
     if (!_formKey.currentState!.validate()) {
       return;
     }
@@ -52,7 +57,7 @@ class _LoginScreenState extends State<LoginScreen> {
       setState(() {
         _errorMessage = 'An error occurred. Please try again.';
       });
-    }
+    }*/
   }
 
   @override
@@ -213,9 +218,11 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         padding: const EdgeInsets.symmetric(vertical: 16),
         alignment: Alignment.center,
+
         child: const Text(
           "Login",
           style: TextStyle(fontSize: 20, color: Colors.white),
+
         ),
       ),
     );

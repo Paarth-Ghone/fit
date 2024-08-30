@@ -1,46 +1,54 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:untitled1/misc/colors.dart'; // Make sure you have the same color definitions here
 
 class ProgressTrackingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Track Progress'),
-        backgroundColor: Colors.blueAccent,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Your Progress',
-              style: TextStyle(
-                fontSize: 22.0,
-                fontWeight: FontWeight.bold,
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xFF2E2E2E), Color(0xFF121212)], // Same gradient as login page
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: 40.0), // For status bar height, adjust as needed
+              Text(
+                'Your Progress',
+                style: TextStyle(
+                  fontSize: 26.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white, // White text for better contrast
+                ),
               ),
-            ),
-            SizedBox(height: 20.0),
-            Expanded(
-              child: ListView(
-                children: [
-                  _buildProgressCard(
-                    title: 'Weight Lifted Over Time',
-                    child: _buildLineChart(),
-                  ),
-                  _buildProgressCard(
-                    title: 'Calories Burned',
-                    child: _buildBarChart(),
-                  ),
-                  _buildProgressCard(
-                    title: 'Workout Consistency',
-                    child: _buildPieChart(),
-                  ),
-                ],
+              SizedBox(height: 20.0),
+              Expanded(
+                child: ListView(
+                  children: [
+                    _buildProgressCard(
+                      title: 'Weight Lifted Over Time',
+                      child: _buildLineChart(),
+                    ),
+                    _buildProgressCard(
+                      title: 'Calories Burned',
+                      child: _buildBarChart(),
+                    ),
+                    _buildProgressCard(
+                      title: 'Workout Consistency',
+                      child: _buildPieChart(),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -50,8 +58,10 @@ class ProgressTrackingPage extends StatelessWidget {
     return Card(
       margin: EdgeInsets.symmetric(vertical: 10.0),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10.0),
+        borderRadius: BorderRadius.circular(16.0), // Rounded corners
       ),
+      elevation: 6.0,
+      color: Colors.black.withOpacity(0.5), // Semi-transparent card background
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -62,6 +72,7 @@ class ProgressTrackingPage extends StatelessWidget {
               style: TextStyle(
                 fontSize: 18.0,
                 fontWeight: FontWeight.bold,
+                color: Colors.white, // White text to match the theme
               ),
             ),
             SizedBox(height: 20.0),
@@ -78,6 +89,7 @@ class ProgressTrackingPage extends StatelessWidget {
   Widget _buildLineChart() {
     return LineChart(
       LineChartData(
+        backgroundColor: Colors.transparent, // Transparent background
         gridData: FlGridData(show: false),
         titlesData: FlTitlesData(show: false),
         borderData: FlBorderData(show: false),
@@ -91,9 +103,16 @@ class ProgressTrackingPage extends StatelessWidget {
               FlSpot(4, 250),
             ],
             isCurved: true,
-            color: Colors.blueAccent,
+            color: Colors.greenAccent, // Use green accent for charts
             barWidth: 4,
-            belowBarData: BarAreaData(show: false),
+            belowBarData: BarAreaData(
+              show: true,
+              gradient: LinearGradient(
+                colors: [Colors.greenAccent.withOpacity(0.5), Colors.transparent],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
+            ),
           ),
         ],
       ),
@@ -103,6 +122,7 @@ class ProgressTrackingPage extends StatelessWidget {
   Widget _buildBarChart() {
     return BarChart(
       BarChartData(
+        backgroundColor: Colors.transparent, // Transparent background
         gridData: FlGridData(show: false),
         titlesData: FlTitlesData(show: false),
         borderData: FlBorderData(show: false),
@@ -113,7 +133,9 @@ class ProgressTrackingPage extends StatelessWidget {
               BarChartRodData(
                 fromY: 0,
                 toY: 500,
-                color: Colors.orangeAccent,
+                color: Colors.greenAccent, // Use green accent for bars
+                width: 15,
+                borderRadius: BorderRadius.circular(4),
               ),
             ],
           ),
@@ -123,7 +145,9 @@ class ProgressTrackingPage extends StatelessWidget {
               BarChartRodData(
                 fromY: 0,
                 toY: 700,
-                color: Colors.orangeAccent,
+                color: Colors.greenAccent,
+                width: 15,
+                borderRadius: BorderRadius.circular(4),
               ),
             ],
           ),
@@ -133,7 +157,9 @@ class ProgressTrackingPage extends StatelessWidget {
               BarChartRodData(
                 fromY: 0,
                 toY: 600,
-                color: Colors.orangeAccent,
+                color: Colors.greenAccent,
+                width: 15,
+                borderRadius: BorderRadius.circular(4),
               ),
             ],
           ),
@@ -143,7 +169,9 @@ class ProgressTrackingPage extends StatelessWidget {
               BarChartRodData(
                 fromY: 0,
                 toY: 800,
-                color: Colors.orangeAccent,
+                color: Colors.greenAccent,
+                width: 15,
+                borderRadius: BorderRadius.circular(4),
               ),
             ],
           ),
@@ -156,11 +184,32 @@ class ProgressTrackingPage extends StatelessWidget {
     return PieChart(
       PieChartData(
         sections: [
-          PieChartSectionData(value: 40, color: Colors.green, title: '40%'),
-          PieChartSectionData(value: 30, color: Colors.blue, title: '30%'),
-          PieChartSectionData(value: 20, color: Colors.orange, title: '20%'),
-          PieChartSectionData(value: 10, color: Colors.red, title: '10%'),
+          PieChartSectionData(
+            value: 40,
+            color: Colors.greenAccent,
+            title: '40%',
+            titleStyle: TextStyle(color: Colors.white, fontSize: 14),
+          ),
+          PieChartSectionData(
+            value: 30,
+            color: Colors.blueAccent,
+            title: '30%',
+            titleStyle: TextStyle(color: Colors.white, fontSize: 14),
+          ),
+          PieChartSectionData(
+            value: 20,
+            color: Colors.orangeAccent,
+            title: '20%',
+            titleStyle: TextStyle(color: Colors.white, fontSize: 14),
+          ),
+          PieChartSectionData(
+            value: 10,
+            color: Colors.redAccent,
+            title: '10%',
+            titleStyle: TextStyle(color: Colors.white, fontSize: 14),
+          ),
         ],
+        borderData: FlBorderData(show: false),
       ),
     );
   }
