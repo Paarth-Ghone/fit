@@ -250,27 +250,16 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                             height: 320,
                             child: Column(
                               children: [
-                                // Gradient border for images
+                                // Image Container without the gradient border
                                 Container(
-                                  padding: const EdgeInsets.all(4), // Padding for the border effect
+                                  width: double.infinity,
+                                  height: 260,
                                   decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                      colors: [Colors.greenAccent, Colors.lightGreen],
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight,
-                                    ),
-                                    borderRadius: BorderRadius.circular(24),
-                                  ),
-                                  child: Container(
-                                    width: double.infinity,
-                                    height: 260,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(20),
-                                      color: Colors.grey[800],
-                                      image: DecorationImage(
-                                        image: AssetImage("img/" + imageName),
-                                        fit: BoxFit.cover,
-                                      ),
+                                    borderRadius: BorderRadius.circular(20),
+                                    color: Colors.grey[800],
+                                    image: DecorationImage(
+                                      image: AssetImage("img/" + imageName),
+                                      fit: BoxFit.cover,
                                     ),
                                   ),
                                 ),

@@ -14,12 +14,13 @@ class ResponsiveButton extends StatelessWidget {
     this.width = 120,
     this.isResponsive,
     this.onPressed,
-    required this.buttonText, // Ensure buttonText is passed
+    required this.buttonText, required Color backgroundColor, required Color textColor, // Ensure buttonText is passed
   });
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
+
       onTap: onPressed,
       child: Container(
         width: isResponsive == true ? double.maxFinite : width,

@@ -85,18 +85,26 @@ class _FoodIntakeLoggingPageState extends State<FoodIntakeLoggingPage> {
                 SizedBox(height: 20.0),
                 Align(
                   alignment: Alignment.centerRight,
-                  child: ElevatedButton(
-                    onPressed: _addFoodEntry,
-                    child: Text('Add Food'),
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white, backgroundColor: Colors.deepPurpleAccent,
-                      padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [Color(0xFF00FFCB), Color(0xFF008CFF)], // Gradient colors
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
                       ),
-                      textStyle: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
+                      borderRadius: BorderRadius.circular(12.0),
+                    ),
+                    child: TextButton(
+                      onPressed: _addFoodEntry,
+                      style: TextButton.styleFrom(
+                        foregroundColor: Colors.white, padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0), // Text color
+                      ),
+                      child: Text(
+                        'Add Food',
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),

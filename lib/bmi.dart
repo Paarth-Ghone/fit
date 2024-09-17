@@ -95,19 +95,27 @@ class _BMICalculatorPageState extends State<BMICalculatorPage> {
                 SizedBox(height: 10.0),
                 _buildInputField('Weight (kg)', _weightController),
                 SizedBox(height: 20.0),
-                ElevatedButton(
-                  onPressed: _calculateBMI,
-                  child: Text('Calculate BMI'),
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: Colors.deepPurpleAccent,
-                    padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12.0),
+                Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [Color(0xFF00FFCB), Color(0xFF008CFF)], // Gradient colors
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
                     ),
-                    textStyle: TextStyle(
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.bold,
+                    borderRadius: BorderRadius.circular(12.0),
+                  ),
+                  child: TextButton(
+                    onPressed: _calculateBMI,
+                    style: TextButton.styleFrom(
+                      foregroundColor: Colors.white, padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0), // Text color
+                      backgroundColor: Colors.transparent, // Background color for the TextButton
+                    ),
+                    child: Text(
+                      'Calculate BMI',
+                      style: TextStyle(
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),

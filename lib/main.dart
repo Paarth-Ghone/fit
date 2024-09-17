@@ -32,9 +32,9 @@ class WelcomeScreen extends StatefulWidget {
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
   final List<String> _imagePaths = [
-    "img/background.png",
-    'assets/image2.png',
-    'assets/image3.png',
+    "img/1st.png",
+    'img/2nd.png',
+    'img/3rd.png',
   ];
   final PageController _pageController = PageController();
   late final Timer _timer;
@@ -93,13 +93,16 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 },
                 child: Text('Get Started'),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blueAccent,
+
+                  backgroundColor: Colors.white,
                   padding: EdgeInsets.symmetric(horizontal: 40.0, vertical: 15.0),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30.0),
                   ),
                 ),
+
               ),
+
             ),
           ),
         ],

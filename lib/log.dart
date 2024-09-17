@@ -17,18 +17,15 @@ class _LoginScreenState extends State<LoginScreen> {
   String _errorMessage = '';
 
   void _submit() async {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => HomePage()),
-    );
-    /*
+
+
     if (!_formKey.currentState!.validate()) {
       return;
     }
     _formKey.currentState!.save();
 
     try {
-      final url = Uri.parse('http://192.168.0.109:5000/login'); // Your Node.js backend URL
+      final url = Uri.parse('https://test-tuk7.onrender.com/login'); // Your Node.js backend URL
       final response = await http.post(
         url,
         headers: {'Content-Type': 'application/json'},
@@ -57,7 +54,7 @@ class _LoginScreenState extends State<LoginScreen> {
       setState(() {
         _errorMessage = 'An error occurred. Please try again.';
       });
-    }*/
+    }
   }
 
   @override

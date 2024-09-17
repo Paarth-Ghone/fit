@@ -81,7 +81,7 @@ class _SignUpPageState extends State<SignUpPage> {
       final String password = _passwordController.text;
 
       try {
-        final url = Uri.parse('http://192.168.0.109:5000/register'); // Your Node.js backend URL
+        final url = Uri.parse('https://test-tuk7.onrender.com/register'); // Your Node.js backend URL
         final response = await http.post(
           url,
           headers: {'Content-Type': 'application/json'},
