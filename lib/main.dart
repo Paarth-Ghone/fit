@@ -1,8 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:untitled1/admin.dart';
-import 'package:untitled1/log.dart';
+import 'admin.dart';
+import 'log.dart';
+
 import 'dash.dart';
 import 'admin.dart';
 void main() async {

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert'; // For jsonEncode
 
 class CalorieTrackingPage extends StatefulWidget {
   @override
@@ -7,6 +10,15 @@ class CalorieTrackingPage extends StatefulWidget {
 
 class _CalorieTrackingPageState extends State<CalorieTrackingPage> {
   final TextEditingController _calorieLimitController = TextEditingController();
+  String? _userId; // Store userId here
+  int dailyGoal = 2000; // Initialize with a default daily goal
+  int caloriesConsumed = 0; // Track total calories consumed
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserId(); // Load userId from SharedPreferences
+  }
 
   @override
   void dispose() {
@@ -14,9 +26,113 @@ class _CalorieTrackingPageState extends State<CalorieTrackingPage> {
     super.dispose();
   }
 
-  void _setCalorieLimit() {
+  Future<void> _loadUserId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _userId = prefs.getString('userId'); // Retrieve userId
+    });
+
+    // Fetch calorie limit and consumed calories after loading userId
+    await _fetchCurrentCalorieLimit();
+    await _fetchCaloriesConsumed();
+  }
+
+  Future<void> _fetchCurrentCalorieLimit() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final savedCalorieLimit = prefs.getInt('dailyCalorieLimit');
+
+    if (savedCalorieLimit != null) {
+      setState(() {
+        dailyGoal = savedCalorieLimit; // Load the calorie limit from SharedPreferences
+      });
+    } else if (_userId != null) {
+      final url = Uri.parse('https://test-tuk7.onrender.com/calorie-limit/$_userId'); // Replace with your API URL
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+        setState(() {
+          dailyGoal = responseData['dailyCalorieLimit']; // Update the daily goal
+        });
+        // Save the fetched calorie limit to SharedPreferences
+        await prefs.setInt('dailyCalorieLimit', dailyGoal);
+      } else {
+        // Handle error
+        print('Failed to fetch calorie limit');
+      }
+    }
+  }
+
+  Future<void> _fetchCaloriesConsumed() async {
+    if (_userId != null) {
+      final date = DateTime.now().toIso8601String().split('T')[0]; // Get today's date in YYYY-MM-DD format
+      final url = Uri.parse('https://test-tuk7.onrender.com/daily-calorie-intake'); // Use your API URL
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'userId': _userId,
+          'date': date, // Pass today's date to the API
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+        setState(() {
+          caloriesConsumed = responseData['totalCaloriesConsumed']; // Update calories consumed from the API response
+        });
+      } else {
+        // Handle error
+        print('Failed to fetch calories consumed: ${response.body}');
+      }
+    } else {
+      print('User ID is null, cannot fetch calories consumed.');
+    }
+  }
+
+  Future<void> _setCalorieLimit() async {
     final limit = _calorieLimitController.text;
-    print('Daily Calorie Limit set to: $limit kcal');
+    if (_userId != null) {
+      // Prepare the API request
+      final url = Uri.parse('https://test-tuk7.onrender.com/calorie-limit'); // Replace with your API URL
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'userId': _userId,
+          'calorieLimit': int.tryParse(limit), // Make sure it's an integer
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        // Successfully set the calorie limit
+        final responseData = jsonDecode(response.body);
+        final updatedCalorieLimit = responseData['dailyCalorieLimit']; // Get the updated limit
+
+        // Save the updated calorie limit to SharedPreferences
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setInt('dailyCalorieLimit', updatedCalorieLimit);
+
+        print('Daily Calorie Limit set to: $updatedCalorieLimit kcal');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Calorie limit set successfully!')),
+        );
+
+        // Update the daily goal counter
+        setState(() {
+          dailyGoal = updatedCalorieLimit; // Update the state variable that tracks the daily goal
+        });
+      } else {
+        // Handle error
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to set calorie limit.')),
+        );
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('User ID not found.')),
+      );
+    }
   }
 
   @override
@@ -36,7 +152,7 @@ class _CalorieTrackingPageState extends State<CalorieTrackingPage> {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  Colors.black.withOpacity(0.6), // Adjusted to match login screen overlay
+                  Colors.black.withOpacity(0.6),
                   Colors.black.withOpacity(0.4),
                 ],
                 begin: Alignment.topCenter,
@@ -94,11 +210,11 @@ class _CalorieTrackingPageState extends State<CalorieTrackingPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildDetailRow('Total Calories Consumed:', '1500 kcal'),
+            _buildDetailRow('Total Calories Consumed:', '$caloriesConsumed kcal'),
             Divider(),
-            _buildDetailRow('Daily Goal:', '2000 kcal'),
+            _buildDetailRow('Daily Goal:', '$dailyGoal kcal'), // Use the dailyGoal variable here
             Divider(),
-            _buildDetailRow('Remaining Calories:', '500 kcal'),
+            // Other summary details can be added here
           ],
         ),
       ),
@@ -106,21 +222,12 @@ class _CalorieTrackingPageState extends State<CalorieTrackingPage> {
   }
 
   Widget _buildDetailRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            label,
-            style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w500, color: Colors.black87),
-          ),
-          Text(
-            value,
-            style: TextStyle(fontSize: 16.0, color: Colors.black54),
-          ),
-        ],
-      ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(label, style: TextStyle(fontSize: 16.0)),
+        Text(value, style: TextStyle(fontSize: 16.0)),
+      ],
     );
   }
 
@@ -129,45 +236,26 @@ class _CalorieTrackingPageState extends State<CalorieTrackingPage> {
       controller: _calorieLimitController,
       keyboardType: TextInputType.number,
       decoration: InputDecoration(
-        labelText: 'Daily Calorie Limit (kcal)',
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8.0),
-        ),
-        contentPadding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 12.0),
+        labelText: 'Enter your daily calorie limit',
         filled: true,
         fillColor: Colors.white,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16.0),
+          borderSide: BorderSide.none,
+        ),
       ),
     );
   }
 
   Widget _buildGradientButton() {
-    return Container(
-      width: 150, // Adjust the width as needed
-      height: 50,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Color(0xFF00FFCB), Color(0xFF008CFF)], // Use the same gradient as the login button
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(12.0),
-      ),
-      child: ElevatedButton(
-        onPressed: _setCalorieLimit,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.transparent, // Make button background transparent
-          shadowColor: Colors.transparent, // Remove button shadow
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12.0),
-          ),
-        ),
-        child: Text(
-          'Set Limit',
-          style: TextStyle(
-            fontSize: 18.0,
-
-            color: Colors.white,
-          ),
+    return ElevatedButton(
+      onPressed: _setCalorieLimit,
+      child: Text('Set Calorie Limit'),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.redAccent,
+        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
         ),
       ),
     );

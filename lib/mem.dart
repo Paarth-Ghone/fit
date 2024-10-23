@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:untitled1/misc/colors.dart';
 import 'package:untitled1/widgets/app_buttons.dart';
 import 'package:untitled1/widgets/app_largetext.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:untitled1/widgets/app_text.dart';
 import 'package:untitled1/widgets/responsive_button.dart';
-import 'profile.dart';
-import 'settings.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class MembershipPage extends StatefulWidget {
   const MembershipPage({super.key});
@@ -19,9 +20,47 @@ class _MembershipPageState extends State<MembershipPage> {
   final List<String> plans = ["Monthly", "6 Months", "Yearly"];
   final List<double> prices = [1200.0, 6000.0, 12000.0]; // Example prices
 
-  // Example data for the current plan and days remaining
-  String currentPlan = "Monthly"; // Replace with actual data
-  int daysRemaining = 30; // Replace with actual data
+  String currentPlan = "None"; // Default value if no plan exists
+  int daysRemaining = 0; // Default days remaining
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchMembershipDetails();
+  }
+
+  // Fetch membership details from the database
+  Future<void> _fetchMembershipDetails() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userId = prefs.getString('userId');
+
+    if (userId != null) {
+      try {
+        final response = await http.get(
+          Uri.parse('https://test-tuk7.onrender.com/membership/$userId'),
+          headers: {
+            "Authorization": "Bearer ${prefs.getString('token')}",
+          },
+        );
+
+        if (response.statusCode == 200) {
+          final data = jsonDecode(response.body);
+          setState(() {
+            currentPlan = data['plan'] ?? "None";
+            daysRemaining = data['daysRemaining'] ?? 0;
+          });
+        } else {
+          print('Error fetching membership details: ${response.body}');
+        }
+      } catch (e) {
+        print('Error: $e');
+      }
+    } else {
+      print('User not logged in');
+    }
+  }
+
+  bool get canPurchase => currentPlan == "None" || daysRemaining <= 3;
 
   @override
   Widget build(BuildContext context) {
@@ -68,71 +107,33 @@ class _MembershipPageState extends State<MembershipPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         AppLargeText(
-                          text: "Choose Plan",
+                          text: "Current Plan",
                           color: Colors.white.withOpacity(0.7),
                         ),
-                        AppLargeText(
-                          text: "₹${prices[selectedIndex]}",
-                          color: AppColors.mainColor,
-                        ),
+
                       ],
                     ),
-                    SizedBox(height: 20),
                     AppLargeText(
-                      text: "Membership Plans",
-                      color: Colors.white.withOpacity(0.8),
-                      size: 20,
-                    ),
-                    SizedBox(height: 10),
-                    // Plan Selection Buttons
-                    Wrap(
-                      spacing: 10,
-                      runSpacing: 10,
-                      children: List.generate(plans.length, (index) {
-                        return InkWell(
-                          onTap: () {
-                            setState(() {
-                              selectedIndex = index;
-                            });
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                            decoration: BoxDecoration(
-                              gradient: selectedIndex == index
-                                  ? LinearGradient(
-                                colors: [Colors.green.shade300, Colors.green.shade700],
-                              )
-                                  : null,
-                              color: selectedIndex != index ? Colors.grey[800] : null,
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
-                                color: selectedIndex == index ? Colors.transparent : Colors.grey[800]!,
-                              ),
-                            ),
-                            child: AppText(
-                              text: plans[index],
-                              color: selectedIndex == index ? Colors.white : Colors.white70,
-                              size: 16,
-                            ),
-                          ),
-                        );
-                      }),
+                      text: currentPlan == "None" ? "No Plan" : "$currentPlan Membership",
+                      color: AppColors.mainColor,
                     ),
                     SizedBox(height: 20),
                     AppLargeText(
-                      text: "Description",
+                      text: "Days Remaining",
                       color: Colors.white.withOpacity(0.8),
                       size: 20,
                     ),
                     SizedBox(height: 10),
                     AppText(
-                      text: "Select a membership plan that best suits your fitness goals.",
+                      text: "$daysRemaining days",
                       color: Colors.white70,
                     ),
                     SizedBox(height: 20),
-                    // Current Plan and Days Remaining
-                    _buildPlanDetails("Current Plan", "$currentPlan Membership"),
-                    _buildPlanDetails("Days Remaining", "$daysRemaining days"),
+
+
+
+                    // Buying Options
+                    if (canPurchase) _buildPlanSelection(),
                   ],
                 ),
               ),
@@ -145,20 +146,56 @@ class _MembershipPageState extends State<MembershipPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  // Remove AppColors and define colors directly
                   AppButtons(
                     size: 60,
-                    color: Colors.white,  // Updated to white for better visibility on gradient
+                    color: Colors.white,
                     backgroundcolor: Colors.grey.shade400,
-                    bordercolor: Colors.green,  // Gradient border color similar to login button's gradient
+                    bordercolor: Colors.green,
                     isIcon: true,
                     icon: Icons.shopping_cart,
                   ),
                   SizedBox(width: 20),
-                  // Responsive Button with Gradient Background
+                  // Buy Now Button with Gradient Background
                   GestureDetector(
-                    onTap: () {
-                      // Handle purchase action
+                    onTap: () async {
+                      // Retrieve the userId from SharedPreferences
+                      SharedPreferences prefs = await SharedPreferences.getInstance();
+                      String? userId = prefs.getString('userId');
+
+                      if (userId != null) {
+                        String plan = plans[selectedIndex];
+                        double price = prices[selectedIndex];
+
+                        try {
+                          final response = await http.post(
+                            Uri.parse('https://test-tuk7.onrender.com/purchase'),
+                            headers: {
+                              "Content-Type": "application/json",
+                              "Authorization": "Bearer ${prefs.getString('token')}",
+                            },
+                            body: jsonEncode({
+                              "userId": userId,
+                              "plan": plan,
+                              "price": price,
+                            }),
+                          );
+
+                          if (response.statusCode == 201) {
+                            // Handle successful purchase
+                            setState(() {
+                              currentPlan = plan;
+                              daysRemaining = _getDaysForPlan(plan);
+                            });
+                            print('Membership purchased successfully');
+                          } else {
+                            print('Error purchasing membership: ${response.body}');
+                          }
+                        } catch (e) {
+                          print('Error: $e');
+                        }
+                      } else {
+                        print('User not logged in');
+                      }
                     },
                     child: Container(
                       width: 150,
@@ -182,7 +219,7 @@ class _MembershipPageState extends State<MembershipPage> {
                       child: Text(
                         'Buy Now',
                         style: TextStyle(
-                          color: Colors.white, // Set the text color to white for visibility
+                          color: Colors.white,
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
@@ -192,30 +229,83 @@ class _MembershipPageState extends State<MembershipPage> {
                 ],
               ),
             ),
-
           ],
         ),
       ),
     );
   }
 
-  // Helper method for displaying plan details
-  Widget _buildPlanDetails(String title, String value) {
+  Widget _buildPlanSelection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         AppLargeText(
-          text: title,
-          color: Colors.white.withOpacity(0.8),
-          size: 20,
+          text: "Choose Plan",
+          color: Colors.white.withOpacity(0.7),
         ),
-        SizedBox(height: 10),
-        AppText(
-          text: value,
-          color: Colors.white70,
+        SizedBox(height: 20),
+        Wrap(
+          spacing: 10,
+          runSpacing: 10,
+          children: List.generate(plans.length, (index) {
+            return InkWell(
+              onTap: () {
+                setState(() {
+                  selectedIndex = index;
+                });
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                decoration: BoxDecoration(
+                  gradient: selectedIndex == index
+                      ? LinearGradient(
+                    colors: [Colors.green.shade300, Colors.green.shade700],
+                  )
+                      : null,
+                  color: selectedIndex != index ? Colors.grey[800] : null,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: selectedIndex == index ? Colors.transparent : Colors.grey[800]!,
+                  ),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    AppText(
+                      text: plans[index],
+                      color: selectedIndex == index ? Colors.white : Colors.white70,
+                      size: 16,
+                    ),
+                    SizedBox(width: 10),
+                    AppText(
+                      text: "₹${prices[index]}",  // Display the price
+                      color: selectedIndex == index ? Colors.white : Colors.white70,
+                      size: 16,
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }),
         ),
-        SizedBox(height: 10),
+        SizedBox(height: 20),
       ],
     );
   }
+
+
+  // Helper method for getting the days for each plan
+  int _getDaysForPlan(String plan) {
+    switch (plan) {
+      case "Monthly":
+        return 30;
+      case "6 Months":
+        return 180;
+      case "Yearly":
+        return 365;
+      default:
+        return 0;
+    }
+  }
 }
+

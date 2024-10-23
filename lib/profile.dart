@@ -1,10 +1,63 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'editprofile.dart';
+import 'log.dart';
 
-class ProfilePage extends StatelessWidget {
-  final String name = "John Doe";
-  final String email = "john.doe@example.com";
-  final String membershipStatus = "Active";
-  final String profileImageUrl = "https://via.placeholder.com/150";
+class ProfilePage extends StatefulWidget {
+  @override
+  _ProfilePageState createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  String name = "";
+  String email = "";
+  String membershipStatus = "Inactive"; // Default to Inactive
+  String profileImageUrl = "https://via.placeholder.com/150";
+  String? userId;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserIdAndFetchProfile();
+  }
+
+  // Load the userId from SharedPreferences and fetch profile details
+  Future<void> _loadUserIdAndFetchProfile() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    userId = prefs.getString('userId'); // Fetch userId from SharedPreferences
+
+    if (userId != null) {
+      _fetchUserProfile(userId!);
+    } else {
+      // Handle case when userId is null
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('User ID not found')),
+      );
+    }
+  }
+
+  // Fetch user profile and membership status
+  Future<void> _fetchUserProfile(String userId) async {
+    final response = await http.get(
+      Uri.parse('https://test-tuk7.onrender.com/users/$userId'),
+    );
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+
+      setState(() {
+        name = data['name'];
+        email = data['email'];
+        membershipStatus = data['membershipStatus'];
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to load user profile')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +83,7 @@ class ProfilePage extends StatelessWidget {
 
               // Name
               Text(
-                name,
+                name.isNotEmpty ? name : "Loading...",
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -41,7 +94,7 @@ class ProfilePage extends StatelessWidget {
 
               // Email
               Text(
-                email,
+                email.isNotEmpty ? email : "Loading...",
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.grey[400],
@@ -65,7 +118,9 @@ class ProfilePage extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: membershipStatus == "Active" ? Colors.green : Colors.red,
+                      color: membershipStatus == "Active"
+                          ? Colors.green
+                          : Colors.red,
                     ),
                   ),
                 ],
@@ -75,7 +130,15 @@ class ProfilePage extends StatelessWidget {
               // Edit Profile Button
               _buildGradientButton(
                 onPressed: () {
-                  // Navigate to edit profile page
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => EditProfilePage(
+                        currentName: name,
+                        currentEmail: email,
+                      ),
+                    ),
+                  );
                 },
                 icon: Icons.edit,
                 label: "Edit Profile",
@@ -86,7 +149,15 @@ class ProfilePage extends StatelessWidget {
               // Log Out Button
               _buildGradientButton(
                 onPressed: () {
-                  // Log out action
+
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => LoginScreen(
+
+                      ),
+                    ),
+                  );// Log out action
                 },
                 icon: Icons.logout,
                 label: "Log Out",

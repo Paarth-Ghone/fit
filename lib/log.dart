@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'dash.dart'; // Dashboard page
 import 'signup.dart'; // Signup page
@@ -17,8 +18,6 @@ class _LoginScreenState extends State<LoginScreen> {
   String _errorMessage = '';
 
   void _submit() async {
-
-
     if (!_formKey.currentState!.validate()) {
       return;
     }
@@ -39,12 +38,25 @@ class _LoginScreenState extends State<LoginScreen> {
         // Get the token and user details
         final token = responseData['token'];
         final user = responseData['user'];
+        final userId = user['id'];
 
-        // Navigate to the dashboard
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => HomePage()), // Pass user/token if needed
-        );
+        // Store the userId and token using SharedPreferences
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('userId', userId);
+        await prefs.setString('token', token);
+
+        // Navigate to the appropriate dashboard based on user role
+        if (user['role'] == 'admin') {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => AdminDashboard()),
+          );
+        } else {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => HomePage()), // Pass user/token if needed
+          );
+        }
       } else {
         setState(() {
           _errorMessage = 'Invalid email or password';
@@ -57,7 +69,6 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  @override
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -104,7 +115,6 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-
   Widget _header(BuildContext context) {
     return Column(
       children: [
@@ -127,7 +137,6 @@ class _LoginScreenState extends State<LoginScreen> {
       ],
     );
   }
-
 
   Widget _inputField(BuildContext context) {
     return Form(
@@ -187,13 +196,12 @@ class _LoginScreenState extends State<LoginScreen> {
             },
           ),
           const SizedBox(height: 20),
-          _loginButton(), // Use the corrected button
+          _loginButton(),
         ],
       ),
     );
   }
 
-  // Use a container to create a gradient background for the button
   Widget _loginButton() {
     return GestureDetector(
       onTap: _submit,
@@ -215,16 +223,13 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         padding: const EdgeInsets.symmetric(vertical: 16),
         alignment: Alignment.center,
-
         child: const Text(
           "Login",
           style: TextStyle(fontSize: 20, color: Colors.white),
-
         ),
       ),
     );
   }
-
 
   Widget _forgotPassword(BuildContext context) {
     return TextButton(

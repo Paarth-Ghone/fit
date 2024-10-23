@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:untitled1/cal.dart';
-import 'package:untitled1/mem.dart';
+import 'cal.dart';
+import 'mem.dart';
 import 'package:untitled1/misc/colors.dart';
 import 'package:untitled1/widgets/app_largetext.dart';
 import 'package:untitled1/widgets/app_text.dart';
@@ -11,6 +11,7 @@ import 'prog.dart';
 import 'settings.dart';
 import 'logfood.dart';
 import 'bmi.dart';
+import 'complaints.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -21,7 +22,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   var exploreImages = {
-    "background.png": "Progress Tracker",
+    "background.png": "Notices",
     "exer.png": "Exercises",
     "note.png": "Note Workout",
   };
@@ -37,7 +38,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     Widget page;
     switch (imageName) {
       case "background.png":
-        page = ProgressTrackingPage();
+        page = ImportantNoticesPage();
         break;
       case "exer.png":
         page = ExerciseTutorialPage();
@@ -92,6 +93,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           MaterialPageRoute(builder: (context) => SettingsPage()),
         );
         break;
+      case 'Make Complaints':
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => ComplaintsPage()),
+        );
+        break;
     }
   }
 
@@ -130,6 +137,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                           PopupMenuItem<String>(
                             value: 'settings',
                             child: Text('Settings', style: TextStyle(color: Colors.black)),
+                          ),
+                          PopupMenuItem<String>(
+                            value: 'Make Complaints',
+                            child: Text('Complaints', style: TextStyle(color: Colors.black)),
                           ),
                         ];
                       },
